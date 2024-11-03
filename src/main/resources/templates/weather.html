@@ -1,35 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Weather Information</title>
+    <title>날씨 정보</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<!-- 도시 이름 검색 폼 -->
-<form action="/weather" method="get">
-    <label for="city">Enter City Name:</label>
-    <input type="text" id="city" name="city" placeholder="e.g., Seoul" required>
-    <button type="submit">Get Weather</button>
-</form>
+<body class="bg-light">
 
-<h1>Current Weather</h1>
-<p>Temperature: <span th:text="${currentWeather.temperature}"></span>°C</p>
-<p>Feels Like: <span th:text="${currentWeather.feels_like}"></span>°C</p>
-<p>Description: <span th:text="${currentWeather.description}"></span></p>
-<p>Humidity: <span th:text="${currentWeather.humidity}"></span>%</p>
-<p>Cloudiness: <span th:text="${currentWeather.clouds}"></span>%</p>
-<p>Wind Speed: <span th:text="${currentWeather.wind_speed}"></span> m/s</p>
-<p>UV Index: <span th:text="${currentWeather.uvi}"></span></p>
-
-<h1>Weekly Forecast</h1>
-<div th:each="day : ${weeklyForecast}">
-    <p>Date: <span th:text="${#dates.format(day.date * 1000, 'yyyy-MM-dd')}"></span></p>
-    <p>Max Temp: <span th:text="${day.temp_max}"></span>°C</p>
-    <p>Min Temp: <span th:text="${day.temp_min}"></span>°C</p>
-    <p>Description: <span th:text="${day.description}"></span></p>
-    <p>Rain Probability: <span th:text="${day.pop * 100}"></span>%</p>
-    <p>UV Index: <span th:text="${day.uvi}"></span></p>
-    <hr>
+<!-- 검색 폼 -->
+<div class="container mt-5">
+    <form action="/weather" method="get" class="form-inline justify-content-center mb-4">
+        <label for="city" class="mr-2">도시 이름 입력:</label>
+        <input type="text" id="city" name="city" class="form-control mr-2" placeholder="서울" required>
+        <button type="submit" class="btn btn-primary">날씨 조회</button>
+    </form>
 </div>
+
+<!-- 현재 날씨 정보 -->
+<div class="container">
+    <h1 class="text-center text-primary mb-5" th:text="${city} + ' 현재 날씨'">현재 날씨</h1>
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <!-- 아이콘 표시 -->
+            <img th:src="'http://openweathermap.org/img/wn/' + ${currentWeather.icon} + '@2x.png'"
+                 alt="Weather Icon" class="mb-3">
+            <p class="card-text">온도: <span th:text="${currentWeather.temperature}"></span>°C</p>
+            <p class="card-text">체감 온도: <span th:text="${currentWeather.feels_like}"></span>°C</p>
+            <p class="card-text">날씨 설명: <span th:text="${currentWeather.description}"></span></p>
+            <p class="card-text">습도: <span th:text="${currentWeather.humidity}"></span>%</p>
+            <p class="card-text">구름량: <span th:text="${currentWeather.clouds}"></span>%</p>
+            <p class="card-text">바람 속도: <span th:text="${currentWeather.wind_speed}"></span> m/s</p>
+            <p class="card-text">자외선 지수: <span th:text="${currentWeather.uvi}"></span></p>
+        </div>
+    </div>
+</div>
+
+<!-- 주간 날씨 예보 -->
+<div class="container">
+    <h1 class="text-center text-primary mb-5" th:text="${city} + ' 주간 예보'">주간 예보</h1>
+    <div class="row">
+        <div th:each="day : ${weeklyForecast}" class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <!-- 아이콘 표시 -->
+                    <img th:src="'http://openweathermap.org/img/wn/' + ${day.icon} + '@2x.png'"
+                         alt="Weather Icon" class="mb-3">
+                    <h5 class="card-title" th:text="${#dates.format(day.date * 1000, 'EEEE')}"></h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="${#dates.format(day.date * 1000, 'yyyy-MM-dd')}"></h6>
+                    <p class="card-text">최고 온도: <span th:text="${day.temp_max}"></span>°C</p>
+                    <p class="card-text">최저 온도: <span th:text="${day.temp_min}"></span>°C</p>
+                    <p class="card-text" th:text="${day.description}"></p>
+                    <p class="card-text">강수 확률: <span th:text="${day.pop * 100}"></span>%</p>
+                    <p class="card-text">자외선 지수: <span th:text="${day.uvi}"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS 및 jQuery 추가 (필요 시) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

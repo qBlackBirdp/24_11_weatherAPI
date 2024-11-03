@@ -43,7 +43,6 @@ public class WeatherService {
         return restTemplate.getForObject(url, String.class);
     }
 
-    // 현재 날씨 정보를 가져오는 메소드
     public Map<String, Object> getCurrentWeather(String jsonResponse) {
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONObject current = jsonObject.getJSONObject("current");
@@ -53,6 +52,7 @@ public class WeatherService {
         currentWeather.put("temperature", current.getDouble("temp"));
         currentWeather.put("feels_like", current.getDouble("feels_like"));
         currentWeather.put("description", weather.getString("description"));
+        currentWeather.put("icon", weather.getString("icon")); // 아이콘 코드 추가
         currentWeather.put("humidity", current.getInt("humidity"));
         currentWeather.put("clouds", current.getInt("clouds"));
         currentWeather.put("wind_speed", current.getDouble("wind_speed"));
@@ -61,7 +61,6 @@ public class WeatherService {
         return currentWeather;
     }
 
-    // 주간 날씨 예보 정보를 가져오는 메소드
     public List<Map<String, Object>> getWeeklyForecast(String jsonResponse) {
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONArray daily = jsonObject.getJSONArray("daily");
@@ -74,11 +73,12 @@ public class WeatherService {
             JSONObject weather = day.getJSONArray("weather").getJSONObject(0);
 
             Map<String, Object> dailyWeather = new HashMap<>();
-            dailyWeather.put("date", day.getLong("dt"));  // UNIX 타임스탬프
+            dailyWeather.put("date", day.getLong("dt"));
             dailyWeather.put("temp_max", temp.getDouble("max"));
             dailyWeather.put("temp_min", temp.getDouble("min"));
             dailyWeather.put("description", weather.getString("description"));
-            dailyWeather.put("pop", day.optDouble("pop", 0));  // 강수 확률
+            dailyWeather.put("icon", weather.getString("icon")); // 아이콘 코드 추가
+            dailyWeather.put("pop", day.optDouble("pop", 0));
             dailyWeather.put("uvi", day.getDouble("uvi"));
 
             weeklyForecast.add(dailyWeather);

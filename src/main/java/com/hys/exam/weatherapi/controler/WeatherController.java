@@ -19,11 +19,12 @@ public class WeatherController {
     }
 
     @GetMapping("/weather")
-    public String getWeather(@RequestParam(defaultValue = "Seoul") String city, Model model) {
+    public String getWeather(@RequestParam(defaultValue = "서울") String city, Model model) {
         String jsonResponse = weatherService.getWeeklyWeather(city);
         Map<String, Object> currentWeather = weatherService.getCurrentWeather(jsonResponse);
         List<Map<String, Object>> weeklyForecast = weatherService.getWeeklyForecast(jsonResponse);
 
+        model.addAttribute("city", city); // 검색한 도시 이름 추가
         model.addAttribute("currentWeather", currentWeather);
         model.addAttribute("weeklyForecast", weeklyForecast);
 
