@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Information</title>
+</head>
+<body>
+<!-- 도시 이름 검색 폼 -->
+<form action="/weather" method="get">
+    <label for="city">Enter City Name:</label>
+    <input type="text" id="city" name="city" placeholder="e.g., Seoul" required>
+    <button type="submit">Get Weather</button>
+</form>
+
+<h1>Current Weather</h1>
+<p>Temperature: <span th:text="${currentWeather.temperature}"></span>°C</p>
+<p>Feels Like: <span th:text="${currentWeather.feels_like}"></span>°C</p>
+<p>Description: <span th:text="${currentWeather.description}"></span></p>
+<p>Humidity: <span th:text="${currentWeather.humidity}"></span>%</p>
+<p>Cloudiness: <span th:text="${currentWeather.clouds}"></span>%</p>
+<p>Wind Speed: <span th:text="${currentWeather.wind_speed}"></span> m/s</p>
+<p>UV Index: <span th:text="${currentWeather.uvi}"></span></p>
+
+<h1>Weekly Forecast</h1>
+<div th:each="day : ${weeklyForecast}">
+    <p>Date: <span th:text="${#dates.format(day.date * 1000, 'yyyy-MM-dd')}"></span></p>
+    <p>Max Temp: <span th:text="${day.temp_max}"></span>°C</p>
+    <p>Min Temp: <span th:text="${day.temp_min}"></span>°C</p>
+    <p>Description: <span th:text="${day.description}"></span></p>
+    <p>Rain Probability: <span th:text="${day.pop * 100}"></span>%</p>
+    <p>UV Index: <span th:text="${day.uvi}"></span></p>
+    <hr>
+</div>
+</body>
+</html>
